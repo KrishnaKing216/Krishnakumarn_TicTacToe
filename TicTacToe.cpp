@@ -2,7 +2,7 @@
 Nandan Krishnakumar
 TicTacToe - Galbraith C++/Data Structures
 10/08/26 9:37 PM
-Citations: Used ClaudeAI to debug on 10/8/26
+Citations: https://pythontutor.com/visualize.html#mode=display, Used GUI TicTacToe from Programming Logic & Design for reference, Used ClaudeAI to debug on 10/8/26
 */
 #include <iostream>
 
@@ -13,6 +13,8 @@ bool fullGrid(char board[][3]);
 bool gameIsOver(char board[][3]);
 int getValidRow();
 char getValidColumn();
+char again();
+void resetBoard(char board[][3]);
 
 int main()
 {
@@ -23,37 +25,44 @@ int main()
     {' ', ' ', ' '}
   };
   char turn = 'x';
-  while (!gameIsOver(playerBoard))
+  char playAgain = 'y';
+  while (playAgain == 'y')
   {
-    printBoard(playerBoard);
-    cout << "It's " << turn << "'s turn" << endl;
-    int row = getValidRow();
-    char colLetter = getValidColumn();
-    int col;
-    if (colLetter == 'a')
-    {
-        col = 0;
-    }
-    else if (colLetter == 'b')
-    {
-        col = 1;
-    }
-    else
-    {
-        col = 2;
-    }
-    
-    if (turn == 'x')
-    {
-        playerBoard[row-1][col] = 'X';
-        turn = 'o';
-    }
-    else
-    {
-        playerBoard[row-1][col] = 'O';
-        turn = 'x';
-    }
-    
+      while (!gameIsOver(playerBoard))
+      {
+        printBoard(playerBoard);
+        cout << "It's " << turn << "'s turn" << endl;
+        int row = getValidRow();
+        char colLetter = getValidColumn();
+        int col;
+        if (colLetter == 'a')
+        {
+            col = 0;
+        }
+        else if (colLetter == 'b')
+        {
+            col = 1;
+        }
+        else
+        {
+            col = 2;
+        }
+        
+        if (turn == 'x')
+        {
+            playerBoard[row-1][col] = 'X';
+            turn = 'o';
+        }
+        else
+        {
+            playerBoard[row-1][col] = 'O';
+            turn = 'x';
+        }
+        
+      }
+      playAgain = again();
+      resetBoard(playerBoard);
+      turn = 'x';
   }
   return 0;
 }
@@ -101,14 +110,15 @@ bool gameIsOver(char board[][3]) //function to check win conditions
         board[0][i] != ' ')
         {
             printBoard(board);
-            cout << "Player " << board[0][i] << " wins!";
+            cout << "Player " << board[0][i] << " wins!" << endl;
             return true;
         }
         
         if ((board[i][0] == board[i][1]) && (board[i][1] == board[i][2]) && //checks rows
         board[i][0] != ' ')
         {
-            cout << "Player " << board[i][0] << " wins!";
+            printBoard(board);
+            cout << "Player " << board[i][0] << " wins!" << endl;
             return true;
         }
     }
@@ -118,7 +128,7 @@ bool gameIsOver(char board[][3]) //function to check win conditions
     (board[0][0] != ' '))
     {
         printBoard(board);
-        cout << "Player " << board[0][0] << " wins";
+        cout << "Player " << board[0][0] << " wins" << endl;
         return true;
     }
     
@@ -126,7 +136,7 @@ bool gameIsOver(char board[][3]) //function to check win conditions
     (board[2][0] != ' '))
     {
         printBoard(board);
-        cout << "Player " << board[2][0] << " wins";
+        cout << "Player " << board[2][0] << " wins" << endl;
         return true;
     }
     
@@ -134,7 +144,7 @@ bool gameIsOver(char board[][3]) //function to check win conditions
     if (fullGrid(board))
     {
         printBoard(board);
-        cout << "Tie Game!";
+        cout << "Tie Game!" << endl;
         return true;
     }
     
@@ -190,5 +200,41 @@ char getValidColumn() //gets a valid input from the user for the col they wish t
         }
         cout << "Must be a-c inclusive and lowercase!" << endl;
         
+    }
+}
+
+char again() //function to take the user input for playing again and returning it to store in a variable
+{
+    while (true)
+    {
+        char again;
+        cout << "Would you like to play again? (y/n)" << endl;
+        cin >> again;
+        if (cin.fail())
+        {
+            cout << "Enter a valid input" << endl;
+            cin.clear();
+        	cin.ignore(1000, '\n');
+        	continue;
+        }
+        
+        if (again == 'y' || again == 'n')
+        {
+            cin.clear();
+        	cin.ignore(1000, '\n');
+            return again;
+        }
+        cout << "Must be y or n inclusive and lowercase!" << endl;
+    }
+}
+
+void resetBoard(char board[][3]) //resets the board to contain only whitespace
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            board[i][j] = ' ';
+        }
     }
 }
